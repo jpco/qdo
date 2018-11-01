@@ -57,7 +57,7 @@ function DropdownItem({onClick, children}) {
         return null;
         // return (<a className="disabled">{children}</a>);
     } else {
-        return (<a className="notdisabled" onClick={onClick}>{children}</a>);
+        return (<button className="notdisabled" onClick={onClick}>{children}</button>);
     }
 }
 
@@ -93,7 +93,7 @@ function TodoQueueItem({todo, remove, update, move}) {
     };
 
     return (
-        <li>
+        <li className="liNode">
             <FuncButton onClick={() => remove(todo)}>x</FuncButton>
             <Dropdown name="o">
                 <DropdownItem onClick={move.up}>Move up</DropdownItem>
@@ -152,23 +152,25 @@ function TodoTreeItem({todo, add, remove, update, move}) {
 
     return (
         <li>
-            <FuncButton
-                onClick={todo.children.length !== 0 ? null : () => remove(todo)}
-            >x</FuncButton>
-            <Dropdown name="o">
-                <DropdownItem onClick={() => add("", todo)}>Add sub-item</DropdownItem>
-                <DropdownItem onClick={move.top}>Move to top</DropdownItem>
-                <DropdownItem onClick={move.up}>Move up</DropdownItem>
-                <DropdownItem onClick={move.down}>Move down</DropdownItem>
-                <DropdownItem onClick={move.out}>Move out</DropdownItem>
-                <DropdownItem onClick={move.in}>Move in</DropdownItem>
-            </Dropdown>
+            <span className="liNode">
+                <FuncButton
+                    onClick={todo.children.length !== 0 ? null : () => remove(todo)}
+                >x</FuncButton>
+                <Dropdown name="o">
+                    <DropdownItem onClick={() => add("", todo)}>Add sub-item</DropdownItem>
+                    <DropdownItem onClick={move.top}>Move to top</DropdownItem>
+                    <DropdownItem onClick={move.up}>Move up</DropdownItem>
+                    <DropdownItem onClick={move.down}>Move down</DropdownItem>
+                    <DropdownItem onClick={move.out}>Move out</DropdownItem>
+                    <DropdownItem onClick={move.in}>Move in</DropdownItem>
+                </Dropdown>
 
-            <input type="text" className="todoInput tTodoInput"
-                ref={(node) => input = node}
-                defaultValue={todo.text}
-                onBlur={() => update(input.value, todo)}
-            />
+                <input type="text" className="todoInput tTodoInput"
+                    ref={(node) => input = node}
+                    defaultValue={todo.text}
+                    onBlur={() => update(input.value, todo)}
+                />
+            </span>
             <SubTodos children={todo.children} />
         </li>
     );

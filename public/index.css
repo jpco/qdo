@@ -1,3 +1,7 @@
+body {
+    font-family: "Merriweather", serif;
+}
+
 a.context {
     color: #888;
     font-size: 16px;
@@ -17,11 +21,25 @@ input.todoInput {
     width: 350px;
 
     font-size: 16px;
+    font-family: "Merriweather", serif;
 }
 
 input.todoInput:focus {
     border: 1px solid #d4d4d4;
     background: white;
+}
+
+.liNode {
+    display: flex;
+    align-items: center;
+}
+
+.liNode > * {
+    flex: initial;
+}
+
+.liNode > input {
+    flex: 1;
 }
 
 button {
@@ -52,24 +70,16 @@ ul.queue {
     background: white;
 }
 
-.dropdown a {
+.dropdown button {
     display: block;
+    width: 100%;
     border: 1px solid transparent;
-    padding-left: 1ex;
-    padding-right: 1ex;
-
-    user-select: none;
-    -moz-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -o-user-select: none;
+    padding: .5ex;
+    margin: 0;
+    background: transparent;
 }
 
-.dropdown a.disabled {
-    color: #888;
-}
-
-.dropdown a.notdisabled:hover {
+.dropdown button:hover {
     background: #f3f3f3;
     border: 1px solid #dfdfdf;
 }

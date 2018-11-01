@@ -1,0 +1,8 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /todo/{todo} {
+      allow read, update, delete: if request.auth.uid == resource.data.ownerId;
+      allow create: if request.auth.uid != null;
+    }
+  }
+}

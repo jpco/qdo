@@ -4,3 +4,4 @@
 /build
 /dev/**/*.js
 *.min.js
+/.firebase
