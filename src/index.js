@@ -249,7 +249,6 @@ class TodoApp extends React.Component {
             const id = change.doc.id;
             const data = change.doc.data();
 
-            console.log('change', change.type, id);
             if (change.type === "removed") {
                 rmFromParent(todoMap[id]);
                 delete todoMap[id];
