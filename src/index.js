@@ -29,7 +29,7 @@ function Title({user, addTodo}) {
 
 const hashCode = (str) => {
     var hash = 0, i, chr;
-    if (str.length === 0) return hash;
+    if (!str || str.length === 0) return hash;
     for (i = 0; i < str.length; i++) {
         chr   = str.charCodeAt(i);
         hash  = ((hash << 5) - hash) + chr;
@@ -217,7 +217,7 @@ class TodoApp extends React.Component {
         this.state = {
             qNext: 0,
             tNext: 0,
-            todos: []
+            todos: {}
         }
 
         db.collection('todo')
@@ -227,30 +227,60 @@ class TodoApp extends React.Component {
     }
 
     updateTodos(snapshot) {
-        let todoMap = {};
-        snapshot.forEach((doc) => {
-            const data = doc.data();
-            todoMap[doc.id] = {
-                id: doc.id,
-                qOrder: data.qOrder,
-                tOrder: data.tOrder,
-                text: data.text,
-                parent: data.parent,
-                children: []
-            };
-        });
+        const rmFromParent = (todo) => {
+            if (todo.parent && todo.parent.children) {
+                todo.parent.children = todo.parent.children
+                    .filter((t) => t.id != todo.id);
+            }
+        };
 
-        Object.values(todoMap).forEach((todo) => {
-            if (todo.parent && todoMap[todo.parent]) {
-                todo.parent = todoMap[todo.parent];
+        const addToParent = (todo) => {
+            if (todo.parent) {
+                if (todo.parent.children === undefined) {
+                    todo.parent.children = [];
+                }
                 todo.parent.children.push(todo);
             }
+        };
+
+        let todoMap = this.state.todos;
+        let parentDmg = [];
+        snapshot.docChanges().forEach((change) => {
+            const id = change.doc.id;
+            const data = change.doc.data();
+
+            console.log('change', change.type, id);
+            if (change.type === "removed") {
+                rmFromParent(todoMap[id]);
+                delete todoMap[id];
+            } else {
+                if (change.type === "added") {
+                    todoMap[id] = {
+                        id: id,
+                        children: []
+                    };
+                }
+                if (change.type === "modified") {
+                    rmFromParent(todoMap[id]);
+                }
+                todoMap[id].qOrder = data.qOrder;
+                todoMap[id].tOrder = data.tOrder;
+                todoMap[id].text = data.text;
+                todoMap[id].parent = data.parent;
+                parentDmg.push(todoMap[id]);
+            }
+        });
+
+        parentDmg.forEach((todo) => {
+            todo.parent = todoMap[todo.parent];
+            addToParent(todo);
         });
 
         const todos = Object.values(todoMap);
         const qMax = todos.reduce((max, t) => Math.max(max, t.qOrder), 0);
         const tMax = todos.reduce((max, t) => Math.max(max, t.tOrder), 0);
-        this.setState({qNext: qMax + 1, tNext: tMax + 1, todos: todos});
+
+        this.setState({qNext: qMax + 1, tNext: tMax + 1, todos: todoMap});
     }
 
     handleAdd(val, parent) {
@@ -267,7 +297,8 @@ class TodoApp extends React.Component {
         let batch = db.batch();
         const recRemove = (batch, todo) => {
             batch.delete(db.collection('todo').doc(todo.id));
-            if (todo.parent && todo.parent.children.length === 1) {
+            if (todo.parent && todo.parent.children &&
+                    todo.parent.children.length === 1) {
                 recRemove(batch, todo.parent);
             }
         };
@@ -289,14 +320,14 @@ class TodoApp extends React.Component {
             <div>
                 <Title user={this.props.user} addTodo={this.handleAdd.bind(this)} />
                 <TodoQueue
-                    todos={this.state.todos
+                    todos={Object.values(this.state.todos)
                         .filter((todo) => todo.children.length === 0)}
                     remove={this.handleRemove.bind(this)}
                     update={this.handleUpdate.bind(this)}
                 />
                 <h2>All</h2>
                 <TodoTree
-                    todos={this.state.todos
+                    todos={Object.values(this.state.todos)
                         .filter((todo) => !todo.parent)}
                     add={this.handleAdd.bind(this)}
                     remove={this.handleRemove.bind(this)}
