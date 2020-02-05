@@ -4,22 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Qdo</title>
+    <style> div { visibility: hidden; } </style>
+    <noscript>
+        <style> #content { visibility: visible; } </style>
+    </noscript>
   </head>
   <body>
 
     <link rel="stylesheet" href="index.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Merriweather:400,700" />
 
-    <div class="container">
-      <div id="container"></div>
-    </div>
-
-    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-
     <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-firestore.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase-auth.js"></script>
+
+    <div id="content">
+        <h1>Qdo</h1>
+
+        <p>by <a href="https://jpco.io">jpco</a></p>
+
+        <p><a href="login">Log in, sign up, or try the app anonymously</a>.</p>
+
+        <p>Qdo (or qto.do) is a simple&mdash;to the point of being ugly and nearly featureless&mdash;to-do list web app.</p>
+
+        <p>It presents your outstanding items in two forms: First, in a tree structure where you can split and group items into nested structures; and second, in a queue where you can set up your most immediate items to be done.</p>
+
+        <p>Not recommended for actual use.</p>
+    </div>
 
     <script src="index.js"></script>
 

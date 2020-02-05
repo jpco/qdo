@@ -15,6 +15,6 @@
   },
   "scripts": {
     "dev": "mkdir -p dev && npx babel --retain-lines --watch src --out-dir dev --presets @babel/preset-react,@babel/preset-env & python3 -m http.server 2020",
-    "build": "mkdir -p build && npx babel src --out-dir build --presets @babel/preset-react,@babel/preset-env && npx uglifyjs -c -m -o public/index.min.js -- build/index.js && npx uglifyjs -c -m -o public/login/index.min.js -- build/login/index.js"
+    "build": "mkdir -p build && npx babel src --out-dir build --presets @babel/preset-react,@babel/preset-env && npx uglifyjs -c -m -o public/index.min.js -- build/index.js && npx uglifyjs -c -m -o public/~/index.min.js -- build/~/index.js && npx uglifyjs -c -m -o public/login/index.min.js -- build/login/index.js"
   }
 }
